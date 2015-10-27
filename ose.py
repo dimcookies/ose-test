@@ -36,14 +36,11 @@ u"ΠΚΙΑ":["Kiato",u"ΠΖΕΥ",u"ΠΖΕΥ"]
 }
 
 @app.route('/')
-def hello():
+def trainPosition():
 	to_airport = {}
 	from_airport = {}
 	current_sec = int(time.time())
-	response = urllib2.urlopen('http://www.trainose.gr/traingps/ws.php?op=1')
-	html = response.read()
-	parsed_json = json.loads(html)
-	for i in parsed_json:
+	for i in getWSResponse():
 		#get values from record
 		id = i["id"]
 		trip_id = i["tripId"]
@@ -78,9 +75,15 @@ def hello():
 	#orde dictionaries based on id
 	return render_template('index.html', from_airport=OrderedDict(sorted(from_airport.items(), key=lambda t: t[0])), to_airport=OrderedDict(sorted(to_airport.items(), key=lambda t: t[0])))
 
+''' Retreives response from web service and parse it as json '''
+def getWSResponse():
+	response = urllib2.urlopen('http://www.trainose.gr/traingps/ws.php?op=1')
+	html = response.read()
+	return json.loads(html)
+
 ''' Station name from map '''
 def getStation(station):
-	return st.get(station, station)[0]
+	return st.get(station, [station,'',''])[0]
 
 ''' 
 	Next / Prev station from map 
@@ -103,9 +106,9 @@ def checkPrev(id, current_sec):
 
 ''' Seconds to minutes '''
 def convertSecs(sec):
-	if sec < 61:
-		return str(sec) + " sec"
-	return str(sec/60.0)[:4] + " min"
+	min_part = str(sec/60)
+	sec_part = str(sec%60).zfill(2)
+	return min_part + ":" + sec_part + " mins" 
 
 if __name__ == '__main__':	
 	app.run(debug=True)
