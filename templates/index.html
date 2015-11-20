@@ -33,7 +33,7 @@ td, th {
     			<td>{{ to_airport[track].trip_id }}</td>
     			<td>{{ to_airport[track].start }}</td>
     			<td>{{ to_airport[track].end }}</td>
-    			<td> {{ to_airport[track].prev_station }} -> <strong>{{ to_airport[track].station }}</strong> -> {{ to_airport[track].next_station }} (<strong>{{ to_airport[track].last_station }}</strong> {{ to_airport[track].last_station_time_diff }} ago)</td>
+    			<td> {{ to_airport[track].prev_station }} -> <strong>{{ to_airport[track].station }} </strong> ({{ to_airport[track].distance}} km) -> {{ to_airport[track].next_station }} (<strong>{{ to_airport[track].last_station }}</strong> {{ to_airport[track].last_station_distance }} km {{ to_airport[track].last_station_time_diff }} ago)</td>
     			<td>{{ to_airport[track].speed }}</td>
     		</tr>
     		{% endfor %}
@@ -43,7 +43,7 @@ td, th {
     			<td>{{ from_airport[track].trip_id }}</td>
     			<td>{{ from_airport[track].start }}</td>
     			<td>{{ from_airport[track].end }}</td>
-    			<td>{{ from_airport[track].prev_station }} -> <strong>{{ from_airport[track].station }}</strong> -> {{ from_airport[track].next_station }} (<strong>{{ from_airport[track].last_station }}</strong> {{ from_airport[track].last_station_time_diff }} ago)</td>
+    			<td>{{ from_airport[track].prev_station }} -> <strong>{{ from_airport[track].station }} </strong> ({{ from_airport[track].distance}} km) -> {{ from_airport[track].next_station }} (<strong>{{ from_airport[track].last_station }}</strong> {{ from_airport[track].last_station_distance }} km {{ from_airport[track].last_station_time_diff }} ago)</td>
     			<td>{{ from_airport[track].speed }}</td>
     		</tr>
     		{% endfor %}
