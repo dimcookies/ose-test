@@ -27,5 +27,11 @@ class TestStringMethods(unittest.TestCase):
       self.assertEqual(ose.getNextStation(u'NON_EXISTING', "0",1), "")
       self.assertEqual(ose.getNextStation(u'NON_EXISTING', "0",2), "")
 
+
+  def test_calculate_distance(self):
+    self.assertEqual(round(ose.distance_on_unit_sphere(38.03303, 23.82242, 38.0418933333, 23.80414),2),1.88)
+    self.assertEqual(round(ose.distance_on_unit_sphere(38.0418933333, 23.80414, 38.03303, 23.82242),2),1.88)
+    self.assertEqual(round(ose.distance_from_station(38.0573183333, 23.7708183333,u"ΠΗΡΑ"),2), 0.11)
+
 if __name__ == '__main__':
     unittest.main()
