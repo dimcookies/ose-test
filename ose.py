@@ -134,7 +134,6 @@ def distance_from_station(lat1, long1, stationId):
  Output in kilometers
 '''
 def distance_on_unit_sphere(lat1, long1, lat2, long2):
-    print (lat1, long1, lat2, long2)
     # Convert latitude and longitude to
     # spherical coordinates in radians.
     degrees_to_radians = math.pi/180.0
