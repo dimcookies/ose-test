@@ -25,7 +25,30 @@ td, th {
 		</style>
 	</head>
 	<body>
-		
+		<table border="1px">
+
+
+		<tr>
+			{% for station in stationsTo recursive %}
+				<td {%if stationsTo[station] %} bgcolor="#79AB68" {% endif %} >{{stationsTo[station]}}</td>
+			{% endfor %}
+		</tr>
+
+
+		<tr>
+			{% for station in stations recursive %}
+				<th>{{ stations[station] }}</th>
+			{% endfor %}
+		</tr>
+
+		<tr>
+			{% for station in stationsFrom recursive %}
+				<td {%if stationsFrom[station] %} bgcolor="#79AB68" {% endif %} >{{stationsFrom[station]}}</td>
+			{% endfor %}
+		</tr>
+
+		</table>
+		<br/><br/>
 		<table border="1px">		
 			<tr><th colspan="5">To Airport</td></tr>
 			{% for track in to_airport recursive %}
