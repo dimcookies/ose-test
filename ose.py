@@ -149,7 +149,7 @@ Retreive certain stations to show on page ordered
 
 
 def stationsToDisplay():
-    return dict(filter(lambda x: x[0] != 0, map(lambda x: (st[x][3], st[x][0][:3]), st)))
+    return dict(filter(lambda x: x[0] != 0, map(lambda x: (st[x][3], st[x][0]), st)))
 
 '''
 Retreice stations with trains as current station, value
@@ -164,7 +164,7 @@ def trainsToDisplay(trains):
         stations[station] = ""
         for train in trains:
             train = train[1]
-            if train['station'][:3] == station_name:
+            if train['station'] == station_name:
                 stations[station] = stations[station] + str(train['trip_id']) + " (" +str(train['distance']) + " km) "
 
     return stations

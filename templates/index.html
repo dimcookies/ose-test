@@ -37,7 +37,7 @@ td, th {
 
 		<tr>
 			{% for station in stations recursive %}
-				<th>{{ stations[station] }}</th>
+				<th>{{ stations[station][:3] }}</th>
 			{% endfor %}
 		</tr>
 
