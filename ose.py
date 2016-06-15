@@ -173,9 +173,13 @@ def trainsToDisplay(trains):
 
 
 def getWSResponse():
-    response = urllib2.urlopen('http://www.trainose.gr/traingps/ws.php?op=1')
-    html = response.read()
-    return json.loads(html)
+    try:
+        response = urllib2.urlopen('http://www.trainose.gr/traingps/ws.php?op=1')
+        html = response.read()
+        return json.loads(html)
+    except Exception, e:
+        return []
+    
 
 
 ''' Station name from map '''
