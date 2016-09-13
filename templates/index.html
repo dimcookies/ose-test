@@ -30,7 +30,7 @@ td, th {
 
 		<tr>
 			{% for station in stationsTo recursive %}
-				<td {%if stationsTo[station] %} bgcolor="#79AB68" {% endif %} >{{stationsTo[station]}}</td>
+				<td {%if stationsTo[station] %} bgcolor="{%if stationsTo[station][1] > 0 %}#79AB68{% else %}red{% endif %}" {% endif %} >{{stationsTo[station][0]}}</td>
 			{% endfor %}
 		</tr>
 
@@ -43,7 +43,7 @@ td, th {
 
 		<tr>
 			{% for station in stationsFrom recursive %}
-				<td {%if stationsFrom[station] %} bgcolor="#79AB68" {% endif %} >{{stationsFrom[station]}}</td>
+				<td {%if stationsFrom[station] %} bgcolor="{%if stationsFrom[station][1] > 0 %}#79AB68{% else %}red{% endif %}" {% endif %} >{{stationsFrom[station][0]}}</td>
 			{% endfor %}
 		</tr>
 

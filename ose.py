@@ -165,7 +165,7 @@ def trainsToDisplay(trains):
         for train in trains:
             train = train[1]
             if train['station'] == station_name:
-                stations[station] = stations[station] + str(train['trip_id']) + " (" +str(train['distance']) + " km) "
+                stations[station] = (stations[station] + str(train['trip_id']) + " (" +str(train['distance']) + " km) ", float(train['speed'].replace(",",".")))
 
     return stations
 
