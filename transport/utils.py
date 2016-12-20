@@ -55,6 +55,9 @@ def getWSJsonResponse(url):
     try:
         response = urllib2.urlopen(url)
         html = response.read()
-        return json.loads(html)
+        res = json.loads(html)
+        if not res:
+            return []
+        return res
     except Exception, e:
         return []

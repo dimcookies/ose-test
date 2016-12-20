@@ -1,0 +1,37 @@
+<html>
+	<head>
+
+		  <link rel="stylesheet" href="/css">
+
+	</head>
+	<body>
+
+
+
+		<br/><br/>
+
+		<table border="1px">
+			{% for stop in stops %}
+			<tr><th colspan="5">{{stop.name}}</td></tr>
+			{% for dt in stop.data %}
+			<tr>
+				<td style="width:10%"><strong>{{dt.nm}}</strong></td>
+				<td><strong>{{dt.btime2}} minutes</strong></td>
+    		</tr>
+			{% endfor %}
+
+			{% for bus in stop.buses %}
+			<tr>
+    			<td style="width:10%">{{bus.route}}</td>
+				<td>{{bus.dist}} km</td>
+    		</tr>
+			{% endfor %}
+
+    		{% endfor %}
+		</table>
+
+		<p><a href="http://telematics.oasa.gr/api/?act=getStopArrivals&p1=2219">ws call</a></p>
+		<p><a href="/ose">OSE</a></p>
+		
+	</body>
+</html>
