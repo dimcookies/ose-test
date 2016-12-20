@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 import unittest
 import ose
+import utils
+
 
 class TestStringMethods(unittest.TestCase):
 
   def test_convert_seconds(self):
-      self.assertEqual(ose.convertSecs(59), "0:59 mins")
-      self.assertEqual(ose.convertSecs(60), "1:00 mins")
-      self.assertEqual(ose.convertSecs(0), "0:00 mins")
-      self.assertEqual(ose.convertSecs(120), "2:00 mins")
-      self.assertEqual(ose.convertSecs(152), "2:32 mins")
+      self.assertEqual(utils.convertSecs(59), "0:59 mins")
+      self.assertEqual(utils.convertSecs(60), "1:00 mins")
+      self.assertEqual(utils.convertSecs(0), "0:00 mins")
+      self.assertEqual(utils.convertSecs(120), "2:00 mins")
+      self.assertEqual(utils.convertSecs(152), "2:32 mins")
   
   def test_get_station(self):
       self.assertEqual(ose.getStation(u'ΠΠΕΝ'), "Pentelis")
@@ -29,8 +31,8 @@ class TestStringMethods(unittest.TestCase):
 
 
   def test_calculate_distance(self):
-    self.assertEqual(round(ose.distance_on_unit_sphere(38.03303, 23.82242, 38.0418933333, 23.80414),2),1.88)
-    self.assertEqual(round(ose.distance_on_unit_sphere(38.0418933333, 23.80414, 38.03303, 23.82242),2),1.88)
+    self.assertEqual(round(utils.distance_on_unit_sphere(38.03303, 23.82242, 38.0418933333, 23.80414), 2), 1.88)
+    self.assertEqual(round(utils.distance_on_unit_sphere(38.0418933333, 23.80414, 38.03303, 23.82242), 2), 1.88)
     self.assertEqual(round(ose.distance_from_station(38.0573183333, 23.7708183333,u"ΠΗΡΑ"),2), 0.11)
 
 if __name__ == '__main__':
