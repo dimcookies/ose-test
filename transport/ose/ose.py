@@ -5,7 +5,8 @@ from collections import OrderedDict
 from flask import session
 
 from ose_data import st, st_coords, OSE_WS_URL
-from utils import distance_on_unit_sphere, convertSecs, getWSJsonResponse
+
+from transport.utils import distance_on_unit_sphere, convertSecs, getWSJsonResponse
 
 '''TODO refactor: abstract session, refactor to class + methods'''
 def trainPosition():
