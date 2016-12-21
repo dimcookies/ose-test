@@ -15,15 +15,15 @@
 			<tr><th colspan="5">{{stop.name}}</td></tr>
 			{% for dt in stop.data %}
 			<tr>
-				<td style="width:10%"><strong>{{dt.nm}}</strong></td>
+				<td style="width:15%"><strong>{{dt.nm}} ( {{ dt.veh_code }} )</strong></td>
 				<td><strong>{{dt.btime2}} minutes</strong></td>
     		</tr>
 			{% endfor %}
 
 			{% for bus in stop.buses %}
 			<tr>
-    			<td style="width:10%">{{bus.route}}</td>
-				<td>{{bus.dist}} km</td>
+    			<td style="width:10%">{{bus.route}} ( {{ bus.veh_code }} )</td>
+				<td bgcolor="{%if bus.diff > 0 %}red{% else %}#79AB68{% endif %}">{{bus.dist}} km ( was {{ bus.prev_dist }} km)</td>
     		</tr>
 			{% endfor %}
 
