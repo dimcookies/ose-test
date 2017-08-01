@@ -4,57 +4,48 @@ from collections import OrderedDict
 
 from flask import session
 
-from ose_data import st, st_coords, OSE_WS_URL
+from ose_data import st, st_coords, OSE_WS_URL, JsonObject,all_stations_dct,new_stations
 
 from transport.utils import distance_on_unit_sphere, convertSecs, getWSJsonResponse
 
 '''TODO refactor: abstract session, refactor to class + methods'''
-def trainPosition():
-    to_airport = {}
-    from_airport = {}
-    current_sec = int(time.time())
-    for i in getWSJsonResponse(OSE_WS_URL):
-        # get values from record
-        id = i["id"]
-        trip_id = i["tripId"]
-        start = i["tripStartEn"]
-        end = i["tripEndEn"]
-        end2 = i["endStationNameEn"]
-        station = i["closestStationId"]
-        speed = i["speed"]
-        lat = float(i["lat"])
-        lon = float(i["lon"])
-        distance = distance_from_station(lat, lon, station)
-        # create record
-        rc = {'start': start, 'end': end, 'end2': end2, 'station': getStation(station), 'speed': speed, 'id': id, 'trip_id': trip_id, 'distance': distance}
-        # default direction from airport
-        direction = "d"
-        session_id = id + "_" + direction
-        # airport to liosia, kiato
-        if (start in ['AIRPORT'] and (end in ['A. LIOSSIA', 'KIATO'] or end2 in ['A. LIOSSIA', 'KIATO'])) or (start in ['A. LIOSSIA'] and (end in ['KIATO'] or end2 in ['KIATO'])):
-            rc['next_station'] = getNextStation(station, speed, 1)
-            rc['prev_station'] = getNextStation(station, speed, 2)
-            from_airport[id] = rc
-            from_airport[id].update(checkPrev(session_id, current_sec))
-        # kiato,liosia to airport
-        elif start in ['A. LIOSSIA', 'KIATO'] and end in ['AIRPORT'] or end2 in ['AIRPORT']:
-            rc['next_station'] = getNextStation(station, speed, 2)
-            rc['prev_station'] = getNextStation(station, speed, 1)
-            to_airport[id] = rc
-            # update direction
-            direction = "r"
-            session_id = id + "_" + direction
-            to_airport[id].update(checkPrev(session_id, current_sec))
-        # update session if has changed
-        if (not session.has_key(session_id)) or session.get(session_id)[0] != st.get(station, [station, '', ''])[0] or distance != session.get(session_id)[2]:
-            session[session_id] = [st.get(station, [station, '', ''])[0], current_sec, distance]
-    # sort dictionaries based on id
-    return {'stations':stationsToDisplay(),
-                           'stationsFrom':trainsToDisplay(from_airport.items()),
-                           'stationsTo':trainsToDisplay(to_airport.items()),
-                           'from_airport':OrderedDict(sorted(from_airport.items(), key=lambda t: t[0])),
-                           'to_airport':OrderedDict(sorted(to_airport.items(), key=lambda t: t[0]))}
 
+
+def trainPosition():
+    to_airport = []
+    from_airport = []
+    other = []
+    map_from = {}
+    map_to = {}
+    for i in new_stations:
+        map_from[i] = []
+        map_to[i] = []
+    current_sec = int(time.time())
+    trains_dct = getWSJsonResponse(OSE_WS_URL)
+    for train_dct in filter(lambda train: train['tripStartEn'] == 'AIRPORT', trains_dct):
+        from_airport.append(createTrain(train_dct, map_from))
+    for train_dct in filter(lambda train: train['tripEndEn'] == 'AIRPORT', trains_dct):
+        to_airport.append(createTrain(train_dct, map_to))
+    for train_dct in filter(lambda train: train['tripEndEn'] != 'AIRPORT' and train['tripStartEn'] != 'AIRPORT', trains_dct):
+        other.append(createTrain(train_dct, {}))
+
+    # sort dictionaries based on id
+    return {'stations': new_stations,
+            'map_from': map_from,
+            'map_to': map_to,
+            'from_airport': from_airport,
+            'to_airport': to_airport,
+            'other':other, 'map_from':map_from, 'map_to':map_to}
+
+def createTrain(train_dct, map_dct):
+    train_dct['distance'] = distance_from_station(float(train_dct['lat']), float(train_dct['lon']),
+                                                      train_dct["closestStationId"])
+    try:
+        train_dct['closestStation'] = all_stations_dct[train_dct["closestStationId"]].stationNameEn
+    except:
+        train_dct['closestStation'] = train_dct["closestStationId"]
+    map_dct.setdefault(train_dct["closestStationId"],[]).append(train_dct['tripId'] + ' ')
+    return JsonObject(**train_dct)
 
 '''
 Retreive certain stations to show on page ordered
@@ -64,6 +55,7 @@ Retreive certain stations to show on page ordered
 
 def stationsToDisplay():
     return dict(filter(lambda x: x[0] != 0, map(lambda x: (st[x][3], st[x][0]), st)))
+
 
 '''
 Retreice stations with trains as current station, value
@@ -79,7 +71,8 @@ def trainsToDisplay(trains):
         for train in trains:
             train = train[1]
             if train['station'] == station_name:
-                stations[station] = (str(train['trip_id']) + " (" +str(train['distance']) + " km) ", float(train['speed'].replace(",",".")))
+                stations[station] = (str(train['trip_id']) + " (" + str(train['distance']) + " km) ",
+                                     float(train['speed'].replace(",", ".")))
                 break
 
     return stations
@@ -117,6 +110,7 @@ def checkPrev(id, current_sec):
         return record
     return {}
 
+
 '''
 returns distance between current position and a certain station
 returns -1 if station not found
@@ -127,4 +121,3 @@ def distance_from_station(lat1, long1, stationId):
     if not st.has_key(stationId):
         return -1
     return round(distance_on_unit_sphere(lat1, long1, st_coords[stationId][0], st_coords[stationId][1]), 2)
-
