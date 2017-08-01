@@ -53,7 +53,7 @@ def convertSecs(sec):
 
 def getWSJsonResponse(url):
     try:
-        response = urllib2.urlopen(url)
+        response = urllib2.urlopen(url, timeout=25)
         html = response.read()
         res = json.loads(html)
         if not res:
